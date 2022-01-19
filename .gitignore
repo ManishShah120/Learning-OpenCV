@@ -1,0 +1,8 @@
+videos
+
+# Virtual Environment
+.venv
+.vscode
+
+# Python Binaries/Caches
+__pycache__
