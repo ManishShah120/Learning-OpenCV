@@ -15,6 +15,7 @@ class poseDetector:
         trackCon=0.5,
     ):
 
+        self.pTime = 0
         self.mode = mode
         self.complexity = complexity
         self.smooth_landmarks = smooth_landmarks
@@ -48,6 +49,14 @@ class poseDetector:
                 self.mpDraw.draw_landmarks(
                     img, self.results.pose_landmarks, self.mpPose.POSE_CONNECTIONS
                 )
+
+        # For calculating the FPS
+        cTime = time.time()
+        fps = 1 / (cTime - self.pTime)
+        self.pTime = cTime
+        # For emebedding the values to the fps to the cv panel
+        cv2.putText(img, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+
         return img
 
     def findPosition(self, img, draw=True):
@@ -72,19 +81,12 @@ class poseDetector:
 
 def main():
     cap = cv2.VideoCapture("videos/Yoga_Video.mp4")
-    pTime = 0
     detector = poseDetector()
     while True:
         success, img = cap.read()
         img = detector.findPose(img)
         lmList = detector.findPosition(img)
-        print(lmList)
-        cTime = time.time()
-        fps = 1 / (cTime - pTime)
-        pTime = cTime
-        cv2.putText(
-            img, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
-        )
+        # print(lmList)
         cv2.imshow("OpenCV Pose Detection", img)
         cv2.waitKey(1)
 
