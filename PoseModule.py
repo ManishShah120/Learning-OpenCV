@@ -36,6 +36,10 @@ class poseDetector:
         )
 
     def findPose(self, img, draw=True):
+        """
+        Draw connections between the
+        landmarks.
+        """
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.pose.process(imgRGB)
 
@@ -47,11 +51,18 @@ class poseDetector:
         return img
 
     def findPosition(self, img, draw=True):
+        """
+        Returns the list of landmarks
+        positions, which can be used to
+        perform various operations on any
+        specific postions.
+        --> [id, x-coord, y-coord]
+        """
         lmList = []
         if self.results.pose_landmarks:
             for id, lm in enumerate(self.results.pose_landmarks.landmark):
                 h, w, c = img.shape
-                print(id, lm)
+                # print(id, lm) # Can Be removed later
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 lmList.append([id, cx, cy])
                 if draw:
